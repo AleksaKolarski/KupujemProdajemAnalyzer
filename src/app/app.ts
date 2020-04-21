@@ -27,7 +27,7 @@ export const run = () => {
     if (inpSearch && chkSum && inpFile && divPersonList) {
 
         // TEXT INPUT AUTOFOCUS
-        fromEvent(document, 'keydown')
+        fromEvent(document, 'keypress')
             .subscribe(
                 value => {
                     if (inpSearch) inpSearch.focus();
