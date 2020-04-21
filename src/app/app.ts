@@ -1,6 +1,6 @@
 import {Chart} from './chart';
 import {fromEvent} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {Person} from './model/person.model';
 import * as utils from './utils';
 import {returnFileSize} from './utils';
@@ -23,8 +23,16 @@ export const run = () => {
     inpSearch = document.querySelector('#inpSearch');
     chkSum = document.querySelector('#chkSum');
     inpFile = document.querySelector('#inpFile');
-    divPersonList = document.querySelector('#divPersonList');
+    divPersonList = document.querySelector('#div-person-list');
     if (inpSearch && chkSum && inpFile && divPersonList) {
+
+        // TEXT INPUT AUTOFOCUS
+        fromEvent(document, 'keydown')
+            .subscribe(
+                value => {
+                    if (inpSearch) inpSearch.focus();
+                }
+            );
 
         // TEXT INPUT
         fromEvent(inpSearch, 'input')
@@ -76,6 +84,7 @@ export const run = () => {
                                             state.persons.set(file.name, person);
 
                                             const div = document.createElement('div');
+                                            div.classList.add('div-person');
                                             div.id = 'div-person-' + person.name;
 
                                             const chk = document.createElement('input');
@@ -95,10 +104,15 @@ export const run = () => {
                                                 );
 
                                             const span = document.createElement('span');
-                                            span.innerText = person.name + ' (' + returnFileSize(person.fileSize) + ')';
+                                            span.classList.add('span-person-name');
+                                            span.innerText = person.name;
+
+                                            const spanSize = document.createElement('span');
+                                            spanSize.classList.add('span-person-size');
+                                            spanSize.innerText = '(' + returnFileSize(person.fileSize) + ')';
 
                                             const button = document.createElement('button');
-                                            button.innerText = 'X';
+                                            button.innerHTML = '&#x1F5D9';
                                             fromEvent(button, 'click')
                                                 .subscribe(
                                                     value => {
@@ -109,6 +123,7 @@ export const run = () => {
                                                 );
                                             div.appendChild(chk);
                                             div.appendChild(span);
+                                            div.appendChild(spanSize);
                                             div.appendChild(button);
                                             divPersonList?.appendChild(div);
                                             render();
@@ -116,14 +131,15 @@ export const run = () => {
                                     );
                             }
                         });
+                        if (inpFile) inpFile.value = '';
                     }
                 }
             );
     }
 
     function render() {
-        if(inpSearch && chkSum){
-            if(inpSearch.value.length <= 2){
+        if (inpSearch && chkSum) {
+            if (inpSearch.value.length <= 2) {
                 utils.render(chart, new State(), '', chkSum.checked, productStateChange);
             } else {
                 utils.render(chart, state, inpSearch.value, chkSum.checked, productStateChange);
