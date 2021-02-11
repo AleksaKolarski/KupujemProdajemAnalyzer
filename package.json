@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@types/papaparse": "^5.0.3",
-    "apexcharts": "^3.18.1",
+    "apexcharts": "^3.24.0",
     "css-loader": "^3.5.2",
     "less": "^3.11.1",
     "moment": "^2.24.0",
